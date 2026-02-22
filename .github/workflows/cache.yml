@@ -1,0 +1,34 @@
+name: CI with Cache
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        id: cache-step
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+          key: cache-c9276b4
+
+      - name: prime-cache-c9276b4
+        run: |
+          if [ "${{ steps.cache-step.outputs.cache-hit }}" == "true" ]; then
+            echo "Cache hit"
+          else
+            echo "Cache miss"
+          fi
+
+      - name: Install dependencies
+        run: pip install requests
